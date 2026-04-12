@@ -18,7 +18,7 @@ FACT_TABLE_JOBS = [
         f"""
         CREATE OR REPLACE TABLE `{PROJECT_ID}.fct_reporting.nasa_vegetation_biomass_fct` AS
         SELECT *
-        FROM `{PROJECT_ID}.fct_reporting.nasa_vegetation_biomass_cleaned_view`
+        FROM `{PROJECT_ID}.stg_cleaned.nasa_vegetation_biomass_cleaned_view`
         """,
     ),
     (
