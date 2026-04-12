@@ -1,0 +1,39 @@
+name: Monthly Forest Data Ingestion
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"  # runs on the 1st of every month at midnight UTC
+  workflow_dispatch:       # allows manual trigger from the GitHub UI
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write GCP service account key
+        run: echo '${{ secrets.GCP_SA_KEY }}' > google-service-account-key.json
+
+      - name: Run ingestion pipeline
+        env:
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          DATASET_ID: ${{ secrets.DATASET_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS: google-service-account-key.json
+          GEE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GEE_SERVICE_ACCOUNT_EMAIL }}
+          GFW_API_KEY: ${{ secrets.GFW_API_KEY }}
+          NASA_EARTHDATA_USERNAME: ${{ secrets.NASA_EARTHDATA_USERNAME }}
+          NASA_EARTHDATA_PASSWORD: ${{ secrets.NASA_EARTHDATA_PASSWORD }}
+          ALERT_FROM: ${{ secrets.ALERT_FROM }}
+          ALERT_TO: ${{ secrets.ALERT_TO }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python main.py
