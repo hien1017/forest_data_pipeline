@@ -1,0 +1,30 @@
+name: Monthly Fact Table Refresh
+
+on:
+  schedule:
+    - cron: "0 1 1 * *"   # 01:00 AM UTC on the 1st of every month
+  workflow_dispatch:        # allow manual trigger from GitHub Actions tab
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install google-cloud-bigquery
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Refresh fact tables
+        env:
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        run: python refresh_fact_tables.py
