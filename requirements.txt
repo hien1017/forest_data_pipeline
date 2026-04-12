@@ -1,0 +1,8 @@
+requests
+pandas
+earthengine-api
+google-cloud-bigquery
+google-cloud-bigquery-storage
+pyarrow
+python-dotenv
+db-dtypes

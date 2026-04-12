@@ -1,0 +1,12 @@
+# Secrets & credentials
+.env
+google-service-account-key.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# VS Code settings
+.vscode/
+AppData/
